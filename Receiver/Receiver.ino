@@ -68,11 +68,11 @@ void buttonPress(){
     delay(100);
     buttonState = digitalRead(buttonPin);
 
-    if(button_delay == 10) { //short press
-      ledblink(2, 100, ledPin);
+    if(button_delay == 1) { //short press
+      ledblink(5, 100, ledPin);
       setupMode = 1;
     }
-    if(button_delay == 100){ //long press
+    if(button_delay == 70){ //long press
       setupMode = 0;
       EEPROM.update(deviceCountAddres, 255);
       ledblink(5, 500, ledPin);
@@ -100,7 +100,7 @@ void setupNewDevice()
           deviceCount++;  
         uint8_t newAddress[] = {deviceCount};
         uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
-      
+        delay(100);
         if (manager.sendtoWait(newAddress, sizeof(newAddress), from))
         {
           EEPROM.update(deviceCountAddres, deviceCount);

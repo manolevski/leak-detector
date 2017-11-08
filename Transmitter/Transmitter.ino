@@ -39,15 +39,18 @@ void loop()
 
   if(setupMode)
     setupNewAddress();
-  else
-  {
-    float voltage = analogRead(A0) * (5.0 / 1023.0);
-    memcpy(data, &voltage, sizeof(voltage));
-  
-    manager.sendtoWait(data, sizeof(data), SERVER_ADDRESS);
-  
-    delay(5000);
-  }
+  else if(manager.thisAddress() != CLIENT_ADDRESS)
+    sendData();
+}
+
+void sendData()
+{
+  float voltage = analogRead(A0) * (5.0 / 1023.0);
+  memcpy(data, &voltage, sizeof(voltage));
+
+  manager.sendtoWait(data, sizeof(data), SERVER_ADDRESS);
+
+  delay(5000);
 }
 
 void buttonPress()
@@ -60,7 +63,7 @@ void buttonPress()
     buttonState = digitalRead(buttonPin);
 
     if(button_delay == 1) { //short press
-      ledblink(2, 100, ledPin);
+      ledblink(5, 100, ledPin);
       setupMode = 1;
     }
     if(button_delay == 70){ //long press
